@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <!-- Include the CesiumJS JavaScript and CSS files -->
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.58/Build/Cesium/Cesium.js"></script>
+    <script src="http://api.tianditu.gov.cn/cdn/plugins/cesium/cesiumTdt.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.58/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #cesiumContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        #cesiumContainer .cesium-viewer-bottom {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="button1">添加1</button>
+    <button id="button2">添加2</button>
+    <!-- <img src="https://www.freesion.com/images/325/77040d9acc4c45b1d1ec9ab245e4e5dd.png"> -->
+    <div id="cesiumContainer"></div>
+    <script>
+        Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNTIzYmRiMi1hNmIyLTRhNjEtYmEyYi0wYmJlY2Q5MjhkMzEiLCJpZCI6NDEyODEsImlhdCI6MTYwOTkzMDM0M30.Zc_xki4U6vm5GYrDLkCXR842JXhmN6_hzO2huUbEI_I';
+
+        // cesium 初始化
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            shouldAnimate: true,
+            selectionIndicator: true,
+            infoBox: false
+        });
+
+        // let small = "https://img.picui.cn/free/2024/09/05/66d94bf69c6e1.png";
+        // let big = "https://img.picui.cn/free/2024/09/05/66d94c972c715.png";
+        // const viewer = new Cesium.Viewer("cesiumContainer");
+
+        let small = "./image1.png";
+        let big = "./image2.png";
+
+        const dataSource = new Cesium.CustomDataSource('satelliteEntity');
+        const entityCollection = dataSource.entities;
+        viewer.dataSources.add(dataSource);
+
+        const images = [
+            small,
+            big
+        ]
+        function addEntity(index = 0) {
+            const entityObject = {
+                name: Math.random().toString(16),
+                id: Math.random().toString(16),
+                position: Cesium.Cartesian3.fromDegrees(-75.59777 + Math.random() * 0.0001, 40.03883),
+                billboard: {
+                    image: images[index],
+                    width: 48,
+                    height: 48,
+                    show: true,
+                },
+            }
+
+            let entity = viewer.entities.add(entityObject);
+            //let entity = entityCollection.add(entityObject);
+            viewer.zoomTo(entity);
+        }
+        let button1 = document.getElementById("button1");
+        let button2 = document.getElementById("button2");
+        button1.addEventListener("click", () => {
+            addEntity(0)
+        });
+        button2.addEventListener("click", () => {
+            addEntity(1)
+        });
+
+    </script>
+</body>
+
+</html>
